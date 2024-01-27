@@ -75,20 +75,25 @@ exercise 2
 -/
 
 inductive LBinTree (α : Type)
+  | empty : LBinTree α
+  | node  : α -> LBinTree α → LBinTree α → LBinTree α
   /- fill in constructors here -/
   deriving Repr
 
 open LBinTree
 
-def myTree : LBinTree Nat :=
-  sorry
+def myTree : LBinTree Nat := LBinTree.node 5 (LBinTree.node 7 LBinTree.empty (LBinTree.node 3 LBinTree.empty LBinTree.empty)) (LBinTree.node 6 (LBinTree.node 4 LBinTree.empty LBinTree.empty) (LBinTree.node 2 LBinTree.empty LBinTree.empty))
 
+#eval myTree
 -- #eval myTree
 
 namespace LBinTree
 
-def addNodes : LBinTree Nat → Nat := sorry
+def addNodes : LBinTree Nat → Nat
+  | LBinTree.empty => 0
+  | LBinTree.node n l r => n + addNodes l + addNodes r
 
+#eval addNodes myTree
 -- #eval addNodes myTree
 
 def toListInorder : LBinTree α → List α := sorry
