@@ -4,10 +4,6 @@ def map {α β : Type} (f : α → β) : List α → List β
   | [] => []
   | (h :: t) => f h :: map f t
 
-def filter {α : Type} (p : α → Bool) : List α → List α
-  | [] => []
-  | (h :: t) => if p h then h :: filter p t else filter p t
-
 def sum : List Nat → Nat
   | [] => 0
   | (h :: t) => h + sum t
@@ -26,7 +22,7 @@ def question2 (n : Nat) : Bool := n = sum (question1 n)
 
 #eval question2 6
 
-#eval filter question2 (List.range 1000)
+#eval (List.range 1000).filter question2
 
 def question3 {α : Type} : List α → List (List α)
   | [] => [[]]
@@ -36,11 +32,43 @@ def question3 {α : Type} : List α → List (List α)
 -- exercise 1
 -- -/
 
+-- Consider a variation of the Towers of Hanoi puzzle where we assume the pegs A, B, and C are
+-- in a row, and we are only allowed to transfer a disk to an adjacent peg, which is to say, moves
+-- from A to C or vice-versa are ruled out. Convince yourself that the following algorithm works:
+-- procedure hanoiAdj(n, A, B, C)
+-- if n = 0 then
+-- return
+-- else
+-- move n − 1 disks from A to C
+-- move the last disk from A to B
+-- move n − 1 disks from C to A
+-- move the last disk from B to C
+-- move n − 1 disks from A to C
+-- end if
+-- end procedure
+-- Write a Lean program to output the list of moves req
+
 def hanoiAdj (numPegs : Nat) (start aux finish : String) : IO Unit :=
-  sorry
+  match numPegs with
+  | 0 => pure ()
+  | (n + 1) => do
+    hanoiAdj n start aux finish
+    IO.println s!"move disk from {start} to {aux}"
+    hanoiAdj n finish aux start
+    IO.println s!"move disk from {aux} to {finish}"
+    hanoiAdj n aux finish start
 
--- #eval hanoiAdj 5 "A" "B" "C"
+#eval hanoiAdj 5 "A" "B" "C"
 
+def hanoi (num_disks start finish aux: Nat) : IO Unit :=
+  match num_disks with
+  | 0 => pure ()
+  | (n + 1) => do
+    hanoi n start aux finish
+    IO.println s!"move disk from {start} to {finish}"
+    hanoi n aux finish start
+
+#eval hanoi 10 1 2 3
 
 /-
 exercise 2
