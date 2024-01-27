@@ -96,8 +96,11 @@ def addNodes : LBinTree Nat → Nat
 #eval addNodes myTree
 -- #eval addNodes myTree
 
-def toListInorder : LBinTree α → List α := sorry
+def toListInorder : LBinTree α → List α
+  | LBinTree.empty => []
+  | LBinTree.node n l r => toListInorder l ++ [n] ++ toListInorder r
 
+#eval toListInorder myTree
 -- #eval toListInorder myTree
 
 end LBinTree
