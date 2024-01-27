@@ -27,6 +27,12 @@ def question2 (n : Nat) : Bool := n = sum (question1 n)
 #eval question2 6
 
 #eval filter question2 (List.range 1000)
+
+def question3 {α : Type} : List α → List (List α)
+  | [] => [[]]
+  | (h :: t) => map (List.cons h) (question3 t) ++ question3 t
+
+#eval question3 [1,2,3]
 -- exercise 1
 -- -/
 
