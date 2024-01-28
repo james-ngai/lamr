@@ -118,20 +118,13 @@ def choose (n : Nat) (k : Nat) : Nat :=
   fact n / (fact k * fact (n - k))
 
 def pascal : Nat -> IO Unit
-  | 0 => IO.println s!"0: 1¬"
+  | 0 => pure ()
   | (n+1) => do
     pascal n
+    IO.print s!"{n}: "
     for i in [0:n+1] do
       IO.print s!"{choose n i} "
     IO.println "¬"
-    -- let mut row : List Nat := [1]
-    -- for i in [0:n] do
-    --   let mut newRow : List Nat := [1]
-    --   for j in [1:i] do
-    --     newRow := newRow ++ [row[j-1] + row[j]]
-    --   newRow := newRow ++ [1]
-    --   row := newRow
-    -- IO.println row
 
 
 #eval pascal 6
