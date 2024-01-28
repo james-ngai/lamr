@@ -29,6 +29,7 @@ def question3 {α : Type} : List α → List (List α)
   | (h :: t) => map (List.cons h) (question3 t) ++ question3 t
 
 #eval question3 [1,2,3]
+#eval question3 [1,2,3,4]
 -- exercise 1
 -- -/
 
@@ -56,20 +57,9 @@ def hanoiAdj (numPegs : Nat) (start aux finish : String) : IO Unit :=
     IO.println s!"move disk from {start} to {aux}"
     hanoiAdj n finish aux start
     IO.println s!"move disk from {aux} to {finish}"
-    hanoiAdj n aux finish start
+    hanoiAdj n start aux finish
 
 #eval hanoiAdj 5 "A" "B" "C"
-
-def hanoi (num_disks start finish aux: Nat) : IO Unit :=
-  match num_disks with
-  | 0 => pure ()
-  | (n + 1) => do
-    hanoi n start aux finish
-    IO.println s!"move disk from {start} to {finish}"
-    hanoi n aux finish start
-
-#eval hanoi 10 1 2 3
-
 /-
 exercise 2
 -/
