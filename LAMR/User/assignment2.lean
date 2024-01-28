@@ -59,7 +59,7 @@ def hanoiAdj (numPegs : Nat) (start aux finish : String) : IO Unit :=
     IO.println s!"move disk from {aux} to {finish}"
     hanoiAdj n start aux finish
 
-#eval hanoiAdj 5 "A" "B" "C"
+#eval hanoiAdj 3 "A" "B" "C"
 /-
 exercise 2
 -/
