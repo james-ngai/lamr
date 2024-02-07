@@ -36,12 +36,6 @@ end PropForm
 exercise 6
 -/
 
--- Surely just apply some recursion and then bam. There's some recursive rules to get this done
--- So remove all negations???
--- So the only unique thing about this problem is that it's a list. So it's actually trivial, just change of forms.
--- On the right-hand side, Lean determines that `.tr` is `PropForm.tr`
--- because it is expecting a `PropForm` there.
-
 def Clause.toPropForm : Clause → PropForm
   | [] => .fls
   | Lit.tr::[] => .tr
@@ -61,13 +55,6 @@ def CnfForm.toPropForm : CnfForm → PropForm
 #eval toString cnf!{p q r, r -s t, q t}.toPropForm
 #eval toString cnf!{t u v, w x y d e f, f}.toPropForm
 
-
--- def cnfForm.toPropForm (F : CnfForm) : PropForm
---   | [] => PropForm.fls
---   | [[]] => PropForm.tr
---   | [[pos str]] => PropForm.var str
---   | [[neg str]] => PropForm.neg (var str)
---   | A :: B => A.toPropForm ∨ B.toPropForm
 
 /-
 exercise 7
@@ -89,10 +76,22 @@ exercise 7
 -- In the recursive call, refer to the function as just `eval`.
 
 -- Replace this with the real definition.
+
+-- foldl (fun y => . + (3 * y)) 0 (range 10)
+
+def Clause.eval : Clause → PropAssignment → Bool
+  | [], _ => false
+  | Lit.tr::_, _ => true
+  | Lit.fls::_, _ => false
+  | Lit.pos s::A, pa => pa.eval s || eval A pa
+  | Lit.neg s::A, pa => !(pa.eval s) || eval A pa
+
 def CnfForm.eval : CnfForm → PropAssignment → Bool
-  | _, _      => true
+  | [], _      => true
+  | A::rest, pa => (A.eval pa) && (eval rest pa)
 
 #eval cnf!{p q r, r -s t, q t}.eval propassign!{-p, -q, -r, s, -t}
+#eval cnf!{p}.eval propassign!{p, -q, -r, s, -t}
 
 
 /-
