@@ -54,7 +54,7 @@ def CnfForm.toPropForm : CnfForm → PropForm
 
 #eval toString cnf!{p q r, r -s t, q t}.toPropForm
 #eval toString cnf!{t u v, w x y d e f, f}.toPropForm
-
+#eval toString cnf!{t u v, w x y d e f, f, ⊤}.toPropForm
 
 /-
 exercise 7
@@ -62,6 +62,8 @@ exercise 7
 
 -- Remember the notation for propositional assignments.
 #eval propassign!{p, q, -r}.eval "r"
+#eval propassign!{p, q, r}.eval "r"
+
 
 -- Here are some operations on Booleans.
 #eval true && false
@@ -82,7 +84,7 @@ exercise 7
 def Clause.eval : Clause → PropAssignment → Bool
   | [], _ => false
   | Lit.tr::_, _ => true
-  | Lit.fls::_, _ => false
+  | Lit.fls::A, pa => eval A pa
   | Lit.pos s::A, pa => pa.eval s || eval A pa
   | Lit.neg s::A, pa => !(pa.eval s) || eval A pa
 
@@ -91,7 +93,10 @@ def CnfForm.eval : CnfForm → PropAssignment → Bool
   | A::rest, pa => (A.eval pa) && (eval rest pa)
 
 #eval cnf!{p q r, r -s t, q t}.eval propassign!{-p, -q, -r, s, -t}
+#eval cnf!{p q r, r -s t, q t}.eval propassign!{-p, q, -r, s, -t}
+#eval cnf!{p q r, r -s t, q t}.eval propassign!{-p, q, -r, -s, -t}
 #eval cnf!{p}.eval propassign!{p, -q, -r, s, -t}
+#eval cnf!{p}.eval propassign!{-p, -q, -r, s, -t}
 
 
 /-
@@ -146,3 +151,4 @@ end PropForm
 
 #eval prop!{¬ ((p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm
 #eval toString <| prop!{¬ ((p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm.toPropForm
+#eval prop!{¬t}.toEnnfForm
