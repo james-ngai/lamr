@@ -59,6 +59,7 @@ def CnfForm.toPropForm : CnfForm → PropForm
   | A :: rest => PropForm.conj (A.toPropForm) (toPropForm rest)
 
 #eval toString cnf!{p q r, r -s t, q t}.toPropForm
+#eval toString cnf!{t u v, w x y d e f, f}.toPropForm
 
 
 -- def cnfForm.toPropForm (F : CnfForm) : PropForm
