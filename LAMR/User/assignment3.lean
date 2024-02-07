@@ -103,13 +103,29 @@ exercise 8
 
 -- Replace this with the real definition.
 inductive EnnfForm :=
-  sorry
+  | lit  (l : Lit)       : EnnfForm
+  | conj (p q : EnnfForm) : EnnfForm
+  | disj (p q : EnnfForm) : EnnfForm
+  | biImpl (p q : EnnfForm) : EnnfForm
+  deriving Repr
+
+def EnnfForm.neg : EnnfForm → EnnfForm
+  | lit l    => lit l.negate
+  | conj p q => disj (neg p) (neg q)
+  | disj p q => conj (neg p) (neg q)
+  | biImpl p q  => disj (conj p (neg q)) (conj (neg p) q)
 
 namespace EnnfForm
 
 -- Replace this with the real definition.
 def toPropForm : EnnfForm → PropForm
-  | _ => sorry
+  | lit Lit.tr => PropForm.tr
+  | lit Lit.fls => PropForm.fls
+  | lit (Lit.pos s) => PropForm.var s
+  | lit (Lit.neg s) => PropForm.neg (PropForm.var s)
+  | conj p q => .conj p.toPropForm q.toPropForm
+  | disj p q => .disj p.toPropForm q.toPropForm
+  | biImpl p q => .biImpl p.toPropForm q.toPropForm
 
 end EnnfForm
 
@@ -117,9 +133,16 @@ namespace PropForm
 
 -- Replace this with the real definition.
 def toEnnfForm : PropForm → EnnfForm
-  | _ => sorry
+  | tr         => EnnfForm.lit Lit.tr
+  | fls        => EnnfForm.lit Lit.fls
+  | var n      => EnnfForm.lit (Lit.pos n)
+  | neg p      => p.toEnnfForm.neg
+  | conj p q   => EnnfForm.conj p.toEnnfForm q.toEnnfForm
+  | disj p q   => EnnfForm.disj p.toEnnfForm q.toEnnfForm
+  | impl p q   => EnnfForm.disj p.toEnnfForm.neg q.toEnnfForm
+  | biImpl p q => EnnfForm.biImpl p.toEnnfForm q.toEnnfForm
 
 end PropForm
 
--- #eval prop!{¬ ((p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm
--- #eval toString <| prop!{¬ ((p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm.toPropForm
+#eval prop!{¬ ((p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm
+#eval toString <| prop!{¬ ((p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm.toPropForm
