@@ -118,7 +118,7 @@ def EnnfForm.neg : EnnfForm → EnnfForm
   | lit l    => lit l.negate
   | conj p q => disj (neg p) (neg q)
   | disj p q => conj (neg p) (neg q)
-  | biImpl p q  => disj (conj p (neg q)) (conj (neg p) q)
+  | biImpl p q  => biImpl p q.neg
 
 namespace EnnfForm
 
@@ -151,4 +151,6 @@ end PropForm
 
 #eval prop!{¬ ((p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm
 #eval toString <| prop!{¬ ((p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm.toPropForm
+#eval toString <| prop!{¬ (¬(p ↔ q ↔ r) ∨ s ↔ t)}.toEnnfForm.toPropForm
+
 #eval prop!{¬t}.toEnnfForm
