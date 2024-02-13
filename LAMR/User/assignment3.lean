@@ -98,6 +98,7 @@ def CnfForm.eval : CnfForm → PropAssignment → Bool
 #eval cnf!{p}.eval propassign!{p, -q, -r, s, -t}
 #eval cnf!{p}.eval propassign!{-p, -q, -r, s, -t}
 
+#eval cnf!{-p}.eval propassign!{-q, -r, s, -t}
 
 /-
 exercise 8
